@@ -1,6 +1,7 @@
 import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import Cart from "../components/Cart";
+import ItemModal from "../components/ItemModal";
 import MenuCard from "../components/MenuCard";
 import OrderStatus from "../components/OrderStatus";
 import { db } from "../lib/firebase";
@@ -433,6 +434,9 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [menuItems, setMenuItems] = useState(defaultMenuItems);
   const [loading, setLoading] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const categories = [
     "All",
@@ -459,6 +463,14 @@ export default function Home() {
 
 
   useEffect(() => {
+    // Check if mobile
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
     // Try to connect to Firebase, but don't block the UI
     const unsubscribe = onSnapshot(
       collection(db, "menuItems"),
@@ -485,7 +497,10 @@ export default function Home() {
       }
     );
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
 
   useEffect(() => {
@@ -511,6 +526,16 @@ export default function Home() {
       }
       return [...prev, { ...item, quantity: 1 }];
     });
+  };
+
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedItem(null);
   };
 
   const removeFromCart = (itemId) => {
@@ -639,18 +664,42 @@ export default function Home() {
           </div>
           <div className="menu-grid">
             {filteredItems.map((item) => (
-              <MenuCard key={item.id} item={item} onAddToCart={addToCart} />
+              <MenuCard 
+                key={item.id} 
+                item={item} 
+                onAddToCart={addToCart}
+                onItemClick={handleItemClick}
+              />
             ))}
           </div>
         </section>
 
+        {!isMobile && (
+          <Cart
+            items={cart}
+            onRemoveItem={removeFromCart}
+            onUpdateQuantity={updateQuantity}
+            onPlaceOrder={placeOrder}
+          />
+        )}
+      </main>
+
+      {isMobile && (
         <Cart
           items={cart}
           onRemoveItem={removeFromCart}
           onUpdateQuantity={updateQuantity}
           onPlaceOrder={placeOrder}
+          isMobile={true}
         />
-      </main>
+      )}
+
+      <ItemModal
+        item={selectedItem}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onAddToCart={addToCart}
+      />
     </div>
   );
 }
