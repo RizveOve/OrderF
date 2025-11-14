@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 export default function ItemModal({ item, isOpen, onClose, onAddToCart }) {
   const [imageError, setImageError] = useState(false);
@@ -8,19 +8,21 @@ export default function ItemModal({ item, isOpen, onClose, onAddToCart }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>×</button>
-        
+        <button className="modal-close" onClick={onClose}>
+          ×
+        </button>
+
         <div className="modal-image">
-          {!imageError && item.image && item.image.startsWith('http') ? (
-            <img 
-              src={item.image} 
+          {!imageError && item.image && item.image.startsWith("http") ? (
+            <img
+              src={item.image}
               alt={item.name}
               onError={() => setImageError(true)}
               className="modal-food-image"
             />
           ) : (
             <div className="modal-emoji-fallback">
-              {item.fallbackEmoji || item.image || '🍽️'}
+              {item.fallbackEmoji || item.image || "🍽️"}
             </div>
           )}
         </div>
@@ -32,8 +34,8 @@ export default function ItemModal({ item, isOpen, onClose, onAddToCart }) {
           {item.description && (
             <p className="modal-description">{item.description}</p>
           )}
-          
-          <button 
+
+          <button
             className="btn-primary modal-add-btn"
             onClick={() => {
               onAddToCart(item);
