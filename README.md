@@ -9,9 +9,19 @@ A cutting-edge, mobile-first restaurant ordering system designed for modern dini
 
 ## 🌟 Live Demo
 
-**Experience the app live:** [https://orderf.netlify.app/](https://orderf.netlify.app/)
+**Experience the app live:**
+For guests: [https://orderf.netlify.app/](https://orderf.netlify.app/)
+For employees: [https://orderf.netlify.app/admin/](https://orderf.netlify.app/admin/)
 
-_Try adding items to your cart and experience the smooth, mobile-optimized interface!_
+Credentials for master admin:
+Email address: admin@flychicken.com
+Password: FlyChicken2024!
+
+Credentials for stuff admin:
+Username: Hasan
+Password: 123456
+
+Try adding items to your cart and experience the smooth, mobile-optimized interface!
 
 ## ✨ Key Features
 
